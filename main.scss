@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#bar-container {
+    height: 100px;
+
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+
+    div {
+        display: inline-block;
+        background-color: aqua;
+        flex-grow: 1;
+    }
+}
