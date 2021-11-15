@@ -11,16 +11,22 @@
     </head>
     <body>
         <script src="main.js" async defer></script>
-
-        <button id="reset-array">Reset array</button>
-        <input type="range" min="1" max="100" value="50" id="item-count-slider">
-        <input type="range" min="1" max="100" value="50" id="speed-slider">
-
-        <div class="button-list">
-            <ul id="button-list-list"></ul>
+        <div class="controls">
+            <div class="array-controls-wrapper">
+                <button id="reset-array">Reset array</button>
+                <div class="sliders-wrapper">
+                    <div class="slider-container">
+                        <div>Size of array</div>
+                        <input type="range" min="1" max="100" value="50" id="item-count-slider">
+                    </div>
+                    <div class="slider-container">
+                        <div>Speed of sorting</div>
+                        <input type="range" min="1" max="100" value="50" id="speed-slider">
+                    </div>
+                </div>
+            </div>
+            <ul id="sorting-button-list"></ul>
         </div>
-
         <div id="bar-container"></div>
-
     </body>
 </html>

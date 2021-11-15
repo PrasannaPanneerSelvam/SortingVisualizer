@@ -1,7 +1,17 @@
+$barColor: aqua;
+$selectedBar1Color: green;
+$selectedBar2Color: red;
+
+$mobileScreenWidth: 600px;
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  min-width: 100vw;
 }
 
 button {
@@ -9,26 +19,67 @@ button {
   margin: 10px;
 }
 
-.button-list {
-  ul {
-    display: flex;
+
+.controls {
+  display: flex;
+
+  .array-controls-wrapper {
+    display: inherit;
   }
 
-  li {
-    list-style: none;
+  .sliders-wrapper {
+    display: inherit;
+  }
 
-    margin: 10px;
+  .slider-container {
+    display: inherit;
+    align-items: center;
+    margin-left: 10px;
+  
+    div{
+      margin-right: 10px;
+    }
+  }
+
+  #sorting-button-list {
+    display: flex;
+    flex-wrap: wrap;
+  
+    li {
+      list-style: none;
+  
+      margin: 10px;
+      padding: 10px;
+  
+      border: 2px solid gray;
+      border-radius: 2px;
+  
+      cursor: pointer;
+    }
+  
+  }
+
+  @media only screen and (max-width: $mobileScreenWidth) {
+
     padding: 10px;
+    flex-direction: column;
 
-    border: 2px solid gray;
-    border-radius: 2px;
+    .sliders-wrapper {
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
 
-    cursor: pointer;
+    #sorting-button-list {
+      justify-content: space-evenly;
+    }
   }
 }
 
 #bar-container {
   height: 100px;
+  width: 70%;
+  margin: 20px auto;
 
   display: flex;
   align-items: flex-end;
@@ -36,7 +87,22 @@ button {
 
   div {
     display: inline-block;
-    background-color: aqua;
+    background-color: $barColor;
     flex-grow: 1;
+
+    margin-left: 1px;
+  }
+
+  @media only screen and (max-width: $mobileScreenWidth) {
+    width: 100%;
+    margin: 0;
+  }
+
+  .selectedBar1 {
+    background-color: $selectedBar1Color;
+  }
+
+  .selectedBar2 {
+    background-color: $selectedBar2Color;
   }
 }
