@@ -106,3 +106,18 @@ button {
     background-color: $selectedBar2Color;
   }
 }
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  div {
+    margin: 10px 15px;
+    text-align: right;
+
+    @media only screen and (max-width: $mobileScreenWidth) {
+      text-align: center;
+      margin: 10px auto;
+    }
+  }
+}

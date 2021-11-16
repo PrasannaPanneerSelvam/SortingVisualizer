@@ -119,4 +119,22 @@ button {
 #bar-container .selectedBar2 {
   background-color: red;
 }
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+footer div {
+  margin: 10px 15px;
+  text-align: right;
+}
+
+@media only screen and (max-width: 600px) {
+  footer div {
+    text-align: center;
+    margin: 10px auto;
+  }
+}
 /*# sourceMappingURL=main.css.map */
