@@ -100,17 +100,19 @@ const ArraySortingUtils = (function(){
     // Impure function
     function createNewGraph(){
         const { valueArray, divArray } = createBarsArray(range);
+        
+        // Resetting children
+        container.innerHTML = '';
         divArray.forEach(child => container.append(child) );
+        
         sortingDetails = { ...sortingDetails, valueArray, divArray };
     }
 
     // Impure function
     function alterRange(inp){
-        // Resetting children
-        container.innerHTML = '';
-
         range = inp * arraySizeMultiplier;
         proportion = 100 / range;
+
         createNewGraph();
     }
 
@@ -120,7 +122,7 @@ const ArraySortingUtils = (function(){
         sortingDetails.delayTiming = 50 - speed;
     }
     
-    return {alterRange, alterSpeed};
+    return {alterRange, alterSpeed, createNewGraph};
 })();
 
 // Collections of sorting algorithms
@@ -247,7 +249,6 @@ const SortingAlgos = (function (){
         }
         
         await doMergeSort(valueArray, 0, valueArray.length - 1);
-        console.log(valueArray);
     }
 
     // Think and add a way to manipulate at the time of sorting
@@ -335,7 +336,7 @@ ArraySortingUtils.alterSpeed(speedSlider.value);
 
 
 // Adding events for buttons & sliders
-resetArray.addEventListener('click', () => ArraySortingUtils.alterRange(range));
+resetArray.addEventListener('click', ArraySortingUtils.createNewGraph);
 itemCountSlider.addEventListener('change', ({target}) => ArraySortingUtils.alterRange(target.value) );
 speedSlider.addEventListener('change', ({target}) => ArraySortingUtils.alterSpeed(target.value) );
 
