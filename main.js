@@ -134,6 +134,7 @@ const SortingAlgos = (function (){
      
         for(let i = 0; i < valueArray.length; i++)
           for(let j = 0; j < ( valueArray.length - i - 1 ); j++){
+            if(stopOnGoingSort) return;
             if(await compare(j+1, j, sortingProps))
                 await swapLogic(j, j+1, sortingProps);
           }
@@ -145,6 +146,7 @@ const SortingAlgos = (function (){
 
         for (let i = 0, min_idx = 0, n = valueArray.length; i < n-1; min_idx = ++i) {
             for (let j = i + 1; j < n; j++){
+                if(stopOnGoingSort) return;
                 if(await compare(j, min_idx, sortingProps))
                     min_idx = j;
             }
@@ -160,6 +162,7 @@ const SortingAlgos = (function (){
             let i = low - 1;
 
             for (let j = low; j <= high - 1; j++){
+                if(stopOnGoingSort) return;
                 if(await compare(j, high, sortingProps))
                     await swapLogic(++i, j, sortingProps);
             }
@@ -189,6 +192,7 @@ const SortingAlgos = (function (){
                 await heapify(arr, n, i);
     
             for (let i = n - 1; i > 0; i--) {
+                if(stopOnGoingSort) return;
                 await swapLogic(0, i, sortingProps);
                 await heapify(arr, i, 0);
             }
@@ -196,13 +200,16 @@ const SortingAlgos = (function (){
     
         async function heapify(arr, n, i) {
 
+            if(stopOnGoingSort) return;
             let largest = i;
             const l = 2 * i + 1, r = 2 * i + 2;
 
             if (l < n && await compare(largest, l, sortingProps)) largest = l;
     
+            if(stopOnGoingSort) return;
             if (r < n && await compare(largest, r, sortingProps)) largest = r;
     
+            if(stopOnGoingSort) return;
             if (largest != i) {
                 await swapLogic(i, largest, sortingProps);
                 await heapify(arr, n, largest);
@@ -218,6 +225,7 @@ const SortingAlgos = (function (){
         const { valueArray } = sortingProps;
 
         async function merge(arr, l, m, r){
+            if(stopOnGoingSort) return;
             const n1 = m - l + 1,
                 n2 = r - m;
         
@@ -239,6 +247,7 @@ const SortingAlgos = (function (){
         }
         
         async function doMergeSort(arr, l, r){
+            if(stopOnGoingSort) return;
             if (l < r) {
                 const m = l + parseInt( (r-l) / 2 );
         
@@ -269,6 +278,7 @@ const SortingAlgos = (function (){
                 count[i] += count[i - 1];
             
             for (let i = n - 1; i >= 0; i--) {
+                if(stopOnGoingSort) return;
                 const idx = Math.floor(arr[i] / exp) % 10;
 
                 await setHeightDirectly(-- count[ idx ], arr[i], sortingProps, result);
@@ -283,8 +293,10 @@ const SortingAlgos = (function (){
         }
 
             
-        for (let exp = 1, m = Math.max(...valueArray); Math.floor(m / exp) > 0; exp *= 10)
+        for (let exp = 1, m = Math.max(...valueArray); Math.floor(m / exp) > 0; exp *= 10){
+            if(stopOnGoingSort) return;
             await countSort(valueArray, exp);
+        }
     }
     
   async function wrapper(sortingCallback, sortingProps, sortingAlgoName) {
@@ -361,15 +373,13 @@ ArraySortingUtils.alterSpeed(speedSlider.value);
 
 // Adding events for buttons & sliders
 resetArray.addEventListener('click', () => {
-    isAnySortOngoing = false;
-    stopOnGoingSort = false;
+    stopOnGoingSort = true;
     sortOnQueue = () => {};
     ArraySortingUtils.createNewGraph();
 });
 
 itemCountSlider.addEventListener('change', ({target}) => {
-    isAnySortOngoing = false;
-    stopOnGoingSort = false;
+    stopOnGoingSort = true;
     sortOnQueue = () => {};
     ArraySortingUtils.alterRange(target.value);
 });
