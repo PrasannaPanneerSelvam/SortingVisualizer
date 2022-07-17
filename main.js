@@ -133,9 +133,10 @@ const SortingAlgos = (function (){
         const { valueArray } = sortingProps;
      
         for(let i = 0; i < valueArray.length; i++)
-          for(let j = 0; j < ( valueArray.length - i - 1 ); j++)
+          for(let j = 0; j < ( valueArray.length - i - 1 ); j++){
             if(await compare(j+1, j, sortingProps))
                 await swapLogic(j, j+1, sortingProps);
+          }
     }
 
     async function selectionSort(sortingProps){
@@ -143,10 +144,10 @@ const SortingAlgos = (function (){
         const { valueArray } = sortingProps;
 
         for (let i = 0, min_idx = 0, n = valueArray.length; i < n-1; min_idx = ++i) {
-            for (let j = i + 1; j < n; j++)
+            for (let j = i + 1; j < n; j++){
                 if(await compare(j, min_idx, sortingProps))
                     min_idx = j;
-    
+            }
             await swapLogic(min_idx, i, sortingProps);
         }
     }
@@ -158,10 +159,10 @@ const SortingAlgos = (function (){
         async function partition (arr, low, high){ 
             let i = low - 1;
 
-            for (let j = low; j <= high - 1; j++)
+            for (let j = low; j <= high - 1; j++){
                 if(await compare(j, high, sortingProps))
                     await swapLogic(++i, j, sortingProps);
-
+            }
             await swapLogic(i+1, high, sortingProps);
             
             return i + 1;
@@ -286,18 +287,33 @@ const SortingAlgos = (function (){
             await countSort(valueArray, exp);
     }
     
+  async function wrapper(sortingCallback, sortingProps, sortingAlgoName) {
+    console.log(`Starting of ${sortingAlgoName}`);
+    isAnySortOngoing = true;
+    stopOnGoingSort = false;
 
-    return {
-        bubbleSort,
-        selectionSort,
-        quickSort,
-        heapSort,
+    await sortingCallback(sortingProps);
 
-        mergeSort,
-        radixSort,
-    };
-}());
+    isAnySortOngoing = false;
+    stopOnGoingSort = false;
 
+    console.log(`End of ${sortingAlgoName}`);
+
+    const copyOfSortOnQueue = sortOnQueue;
+    sortOnQueue = () => {};
+    copyOfSortOnQueue();
+  }
+
+  return {
+    bubbleSort: (...args) => wrapper(bubbleSort, ...args),
+    selectionSort: (...args) => wrapper(selectionSort, ...args),
+    quickSort: (...args) => wrapper(quickSort, ...args),
+    heapSort: (...args) => wrapper(heapSort, ...args),
+
+    mergeSort: (...args) => wrapper(mergeSort, ...args),
+    radixSort: (...args) => wrapper(radixSort, ...args),
+  };
+})();
 
 /************************************************************ Driver code ***********************************************************************/
 
@@ -312,6 +328,7 @@ const container = document.getElementById('bar-container'),
 let arraySizeMultiplier = window.screen.width < 600 ? 2 : 5,
     range, proportion, sortingDetails = {};
 
+let isAnySortOngoing = false, stopOnGoingSort = false, sortOnQueue = () => {};
 
 /* Creating list items with text + event ->
     <li onclick='() => quickSort(sortingDetails)'>'Quick sort'</li>
@@ -324,8 +341,15 @@ for(const fn of Object.values(SortingAlgos)){
         text = capitalize( fn.name.split('Sort')[0] ) + ' sort';
 
     const li = document.createElement('li');
-    li.innerText = text;
-    li.addEventListener('click', () => fn(sortingDetails));
+    li.textContent = text;
+    li.addEventListener('click', () => {
+        if (isAnySortOngoing) {
+            stopOnGoingSort = true;
+            sortOnQueue = () => fn(sortingDetails, text);
+        } else {
+            fn(sortingDetails, text);
+        }
+    });
 
     buttonList.append(li);
 }
@@ -336,8 +360,19 @@ ArraySortingUtils.alterSpeed(speedSlider.value);
 
 
 // Adding events for buttons & sliders
-resetArray.addEventListener('click', ArraySortingUtils.createNewGraph);
-itemCountSlider.addEventListener('change', ({target}) => ArraySortingUtils.alterRange(target.value) );
+resetArray.addEventListener('click', () => {
+    isAnySortOngoing = false;
+    stopOnGoingSort = false;
+    sortOnQueue = () => {};
+    ArraySortingUtils.createNewGraph();
+});
+
+itemCountSlider.addEventListener('change', ({target}) => {
+    isAnySortOngoing = false;
+    stopOnGoingSort = false;
+    sortOnQueue = () => {};
+    ArraySortingUtils.alterRange(target.value);
+});
 speedSlider.addEventListener('change', ({target}) => ArraySortingUtils.alterSpeed(target.value) );
 
 
